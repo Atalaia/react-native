@@ -9,10 +9,12 @@ function MealsOverviewScreen({ route, navigation }) {
   // To extract the parameters in the navigation route
   const catId = route.params.categoryId;
 
+  // To find all the meals matching the category Id
   const displayedMeals = MEALS.filter((mealItem) => {
     return mealItem.categoryIds.indexOf(catId) >= 0;
   });
 
+  // To display the category title in the navigation stack header
   useLayoutEffect(() => {
     const categoryTitle = CATEGORIES.find(
       (category) => category.id === catId
@@ -23,6 +25,7 @@ function MealsOverviewScreen({ route, navigation }) {
     });
   }, [catId, navigation]);
 
+  // To render each meal item inside the FlatList of meals
   const renderMealItem = (itemData) => {
     const item = itemData.item;
     const mealItemProps = {
