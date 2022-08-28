@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { createPortal } from "react-dom";
 import { StyleSheet } from "react-native";
 
 import ExpensesOutput from "../components/ExpensesOutput.js/ExpensesOutput";
@@ -13,11 +12,15 @@ function RecentExpenses() {
     const today = new Date();
     const date7DaysAgo = getDateMinusDays(today, 7);
 
-    return expense.date > date7DaysAgo;
+    return expense.date >= date7DaysAgo && expense.date <= today;
   });
 
   return (
-    <ExpensesOutput expensesPeriod="Last 7 Days" expenses={recentExpenses} />
+    <ExpensesOutput
+      expensesPeriod="Last 7 Days"
+      expenses={recentExpenses}
+      fallbackText="No expenses registered for the last 7 days."
+    />
   );
 }
 
