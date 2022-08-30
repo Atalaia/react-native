@@ -1,19 +1,16 @@
-import { useLayoutEffect, useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { useContext, useLayoutEffect } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import Button from "../components/ui/Button";
 import IconButton from "../components/ui/IconButton";
-import { ExpensesContext } from "../store/expenses-context";
 import { GlobalStyles } from "../constants/styles";
+import { ExpensesContext } from "../store/expenses-context";
+import { storeExpense } from "../utils/http";
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
-
-  // To convert editedExpenseId into a boolean
-  // True if we are editing, false otherwise
   const isEditing = !!editedExpenseId;
 
   const selectedExpense = expensesCtx.expenses.find(
@@ -39,6 +36,7 @@ function ManageExpense({ route, navigation }) {
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
     } else {
+      storeExpense(expenseData);
       expensesCtx.addExpense(expenseData);
     }
     navigation.goBack();
@@ -48,8 +46,8 @@ function ManageExpense({ route, navigation }) {
     <View style={styles.container}>
       <ExpenseForm
         submitButtonLabel={isEditing ? "Update" : "Add"}
-        onCancel={cancelHandler}
         onSubmit={confirmHandler}
+        onCancel={cancelHandler}
         defaultValues={selectedExpense}
       />
       {isEditing && (

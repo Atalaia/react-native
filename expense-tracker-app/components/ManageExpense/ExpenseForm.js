@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Alert } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import Input from "./Input";
 import Button from "../ui/Button";
@@ -22,11 +22,10 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
     },
   });
 
-  // Generic function to update state and set different input values passed in dynamically
   function inputChangedHandler(inputIdentifier, enteredValue) {
-    setInputs((currentInputs) => {
+    setInputs((curInputs) => {
       return {
-        ...currentInputs,
+        ...curInputs,
         [inputIdentifier]: { value: enteredValue, isValid: true },
       };
     });
@@ -34,25 +33,23 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
 
   function submitHandler() {
     const expenseData = {
-      amount: +inputs.amount.value, // to convert the string into a number
-      date: new Date(inputs.date.value), // to convert a date string that is formatted properly into a date object
+      amount: +inputs.amount.value,
+      date: new Date(inputs.date.value),
       description: inputs.description.value,
     };
 
-    // Validation
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== "Invalid Date";
     const descriptionIsValid = expenseData.description.trim().length > 0;
 
     if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
-      // show feedback
-      //   Alert.alert("Invalid input", "Please check your input values");
-      setInputs((currentInputs) => {
+      // Alert.alert('Invalid input', 'Please check your input values');
+      setInputs((curInputs) => {
         return {
-          amount: { value: currentInputs.amount.value, isValid: amountIsValid },
-          date: { value: currentInputs.date.value, isValid: dateIsValid },
+          amount: { value: curInputs.amount.value, isValid: amountIsValid },
+          date: { value: curInputs.date.value, isValid: dateIsValid },
           description: {
-            value: currentInputs.description.value,
+            value: curInputs.description.value,
             isValid: descriptionIsValid,
           },
         };
@@ -78,7 +75,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
           invalid={!inputs.amount.isValid}
           textInputConfig={{
             keyboardType: "decimal-pad",
-            onChangeText: inputChangedHandler.bind(this, "amount"), // preconfigure the function and bind it for future executions
+            onChangeText: inputChangedHandler.bind(this, "amount"),
             value: inputs.amount.value,
           }}
         />
@@ -98,23 +95,23 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         label="Description"
         invalid={!inputs.description.isValid}
         textInputConfig={{
+          multiline: true,
+          // autoCapitalize: 'none'
+          // autoCorrect: false // default is true
           onChangeText: inputChangedHandler.bind(this, "description"),
           value: inputs.description.value,
-          multiline: true,
-          //  autoCapitalize: "none"
-          //  autoCorrect: false // default is true
         }}
       />
       {formIsInvalid && (
         <Text style={styles.errorText}>
-          Invalid input values - Please check your entered data!
+          Invalid input values - please check your entered data!
         </Text>
       )}
-      <View style={styles.buttonsContainer}>
-        <Button mode="flat" onPress={onCancel} style={styles.button}>
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode="flat" onPress={onCancel}>
           Cancel
         </Button>
-        <Button onPress={submitHandler} style={styles.button}>
+        <Button style={styles.button} onPress={submitHandler}>
           {submitButtonLabel}
         </Button>
       </View>
@@ -147,7 +144,7 @@ const styles = StyleSheet.create({
     color: GlobalStyles.colors.error500,
     margin: 8,
   },
-  buttonsContainer: {
+  buttons: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
